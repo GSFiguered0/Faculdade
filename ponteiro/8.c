@@ -1,21 +1,14 @@
 #include <stdio.h> 
 #include <math.h> 
 
-void alterarValor(int *pA, int *pB) {
-
-    *pA = *pA+*pB; 
-}
-
 int main () {
 
-    int a, b; 
+    float a[10]; 
 
-    printf("Digite o valor de A1 e A2:"); 
-    scanf("%d %d", &a, &b);
-
-    alterarValor(&a, &b);
-
-   printf("Soma em A: %d\nValor em B: %d", a, b);
+    for(int c = 0; c <10; c++) {
+        printf("endereço do elemento 'a' na posição %d: %d", c+1, &a[c]);
+        printf("\n");
+    }
 
     return 0;
 }
