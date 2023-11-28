@@ -1,5 +1,6 @@
 #include <stdio.h> 
 #include <stdlib.h> 
+#include <string.h>
 #include <time.h> 
 
 typedef struct pessoa{
@@ -26,7 +27,7 @@ pessoa* novoUsuario() {
     return novoUser;
 }
 
-pessoa* cadastrarUsuario(pessoa *lista) {
+pessoa* cadastrarUsuario(pessoa *aux) {
     pessoa *novoUser = novoUsuario();
 
     srand(time(NULL));
@@ -35,6 +36,7 @@ pessoa* cadastrarUsuario(pessoa *lista) {
     printf("\nDigite o nome do usuário: ");
     fgets(novoUser->nome, sizeof(novoUser->nome), stdin);
     while (getchar() != '\n');
+    novoUser->nome[strcspn(novoUser->nome, "\n")] = '\0';
 
     printf("Digite a idade: ");
     scanf("%d", &novoUser->idade);
@@ -44,10 +46,10 @@ pessoa* cadastrarUsuario(pessoa *lista) {
     novoUser->prox = NULL;
 
 
-    if(lista == NULL) {
-        lista = novoUser;
+    if(aux == NULL) {
+        aux = novoUser;
     } else {
-        pessoa *atual = lista; 
+        pessoa *atual = aux; 
 
         while(atual->prox != NULL) {
             atual = atual->prox;
@@ -56,13 +58,56 @@ pessoa* cadastrarUsuario(pessoa *lista) {
         atual->prox = novoUser;
     }
 
-    return lista;
+    return aux;
+}
+
+void mostrarLista(pessoa *aux) {
+    pessoa *atual = aux; 
+
+    if(atual == NULL) {
+        printf("Não há ninguém na lista");
+        return; 
+    } else {
+        while(atual != NULL) {
+            printf("Nome: %s", atual->nome);
+            printf("\n");
+            printf("Idade: %d", atual->idade);
+            printf("\n");
+            printf("ID: %d", atual->id);
+            printf("\n");
+
+            atual = atual->prox;
+        }
+    }
+
+}
+
+pessoa* buscarId(pessoa *aux, int idBusca) {
+    pessoa *atual = aux; 
+
+    if(atual == NULL) {
+        printf("Não há ninguém na lista");
+    } else {
+        while(atual != NULL) {
+            if(atual->id == idBusca) {
+                printf("Nome: %s", atual->nome);
+                printf("\n");
+                printf("Idade: %d", atual->idade);
+                printf("\n");
+                printf("ID: %d", atual->id);
+                printf("\n");
+
+                return atual;
+        }
+    }
+    }  
+    atual = atual->prox;
 }
 
 int main() {
 
-    int opcao; 
-    pessoa *lista =  iniciarLista(); 
+    int opcao, idBusca; 
+    pessoa *aux =  iniciarLista(); 
 
     do{ 
 
@@ -78,13 +123,18 @@ int main() {
 
         switch(opcao) {
             case 1: 
-                lista = cadastrarUsuario(lista);
+                aux = cadastrarUsuario(aux);
             break;
 
             case 2: 
+                mostrarLista(aux);
             break;
 
             case 3: 
+                printf("Digite o ID que deseja buscar:");
+                scanf("%d", &idBusca);
+
+                buscarId(aux, idBusca);
             break;
 
             case 4: 
