@@ -132,8 +132,9 @@ produto* excluirProduto(produto *aux, int codigo) {
         printf("Produto não encontrado\n");
     }
 
-    return aux;
+    return aux; 
 }
+
 
 int main() {
 
@@ -172,7 +173,7 @@ int main() {
                 printf("Digite o código que deseja excluir:");
                 scanf("%d", &codigo);
 
-                excluirProduto(aux, codigo);
+                aux = excluirProduto(aux, codigo);
             break;
         }
 
