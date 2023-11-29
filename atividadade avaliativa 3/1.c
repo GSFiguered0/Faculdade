@@ -36,13 +36,12 @@ produto* cadastrarProduto(produto *aux) {
 
     printf("Digite a descrição do produto: ");
     fgets(novoProd->descricao, sizeof(novoProd->descricao), stdin);
-    while (getchar() != '\n');
 
-    printf("\nDigite a quantidade do produto: ");
+    printf("Digite a quantidade do produto: ");
     scanf("%d", &novoProd->quantidade);
     while (getchar() != '\n');
 
-    printf("\nDigite o valor do produto: ");
+    printf("Digite o valor do produto: ");
     scanf("%f", &novoProd->valor);
     while (getchar() != '\n');
 
@@ -72,14 +71,16 @@ void mostrarProdutos(produto *aux) {
         return; 
     } else {
         while(atual != NULL) {
-            printf("Código: %d", atual->codigo);
-            printf("\n");
-            printf("Descrição: %s", atual->descricao);
-            printf("\n");
-            printf("Quantidade: %d", atual->quantidade);
-            printf("\n");
-            printf("Valor: %.2f", atual->valor);
-            printf("\n");
+                printf("----------------------------------");
+                printf("\n");
+                printf("Código: %d", atual->codigo);
+                printf("\n");
+                printf("Descrição: %s", atual->descricao);
+                printf("Quantidade: %d", atual->quantidade);
+                printf("\n");
+                printf("Valor: %.2f", atual->valor);
+                printf("\n");
+                printf("----------------------------------");
 
             atual = atual->prox;
         }
@@ -88,27 +89,50 @@ void mostrarProdutos(produto *aux) {
 }
 
 produto* buscarProduto(produto *aux, int codigo) {
-    produto *atual = aux; 
+    produto *atual = aux;
 
-    if(atual == NULL) {
-        printf("Não há ninguém na lista");
-    } else {
-        while(atual != NULL) {
-            if(atual->codigo == codigo) {
-                printf("Código: %d", atual->codigo);
-                printf("\n");
-                printf("Descrição: %s", atual->descricao);
-                printf("\n");
-                printf("Quantidade: %d", atual->quantidade);
-                printf("\n");
-                printf("Quantidade: %.2f", atual->valor);
-                printf("\n");
-
-                return atual;
+    while (atual != NULL) {
+        if (atual->codigo == codigo) {
+            printf("----------------------------------\n");
+            printf("Código: %d\n", atual->codigo);
+            printf("Descrição: %s", atual->descricao);
+            printf("Quantidade: %d\n", atual->quantidade);
+            printf("Valor: %.2f\n", atual->valor);
+            printf("----------------------------------\n");
+            return atual;
         }
+        atual = atual->prox;
     }
-    }  
-    atual = atual->prox;
+
+    printf("Produto não encontrado\n");
+    return NULL;
+}
+
+produto* excluirProduto(produto *aux, int codigo) {
+    produto *anterior = NULL;
+    produto *atual = aux;
+
+    while (atual != NULL && atual->codigo != codigo) {
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual != NULL && atual->codigo == codigo) {
+        if (anterior != NULL) {
+            // Excluir depois do primeiro
+            anterior->prox = atual->prox;
+        } else {
+            // Excluir o primeiro elemento
+            aux = atual->prox;
+        }
+
+        free(atual);
+        printf("Produto excluído com sucesso\n");
+    } else {
+        printf("Produto não encontrado\n");
+    }
+
+    return aux;
 }
 
 int main() {
@@ -122,6 +146,7 @@ int main() {
         printf("\n2 - Mostrar todos os produtos");
         printf("\n3 - Buscar produto");
         printf("\n4 - Excluir produto");
+        printf("\n5 - Iniciar lista vazia");
         printf("\n0 - Sair");
         printf("\n");
 
@@ -137,16 +162,17 @@ int main() {
             break;
 
             case 3: 
-                printf("Digite o ID que deseja buscar:");
+                printf("Digite o código que deseja buscar:");
                 scanf("%d", &codigo);
 
                 buscarProduto(aux, codigo);
             break;
 
             case 4: 
-            break;
+                printf("Digite o código que deseja excluir:");
+                scanf("%d", &codigo);
 
-            case 5: 
+                excluirProduto(aux, codigo);
             break;
         }
 

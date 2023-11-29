@@ -104,6 +104,44 @@ pessoa* buscarId(pessoa *aux, int idBusca) {
     atual = atual->prox;
 }
 
+void alterarUsuario(pessoa *encontrada) {
+
+    printf("Alterar nome: "); 
+    fgets(encontrada->nome, sizeof(encontrada->nome), stdin);
+    while (getchar() != '\n');
+
+    printf("\nalterar Idade: ");
+    scanf("%d", &encontrada->idade);
+    while (getchar() != '\n');
+
+}
+
+pessoa* excluirUsuario(pessoa *aux, int idBusca) {
+    pessoa *anterior = NULL; 
+    pessoa *atual = aux;
+
+    while(atual != NULL && atual->id != idBusca) {
+        anterior = atual; 
+        atual = atual->prox; 
+    }
+
+    if(atual != NULL) {
+        if(anterior != NULL) {
+            //excluir depois do primeiro
+            anterior->prox = atual->prox;
+        } else { 
+            aux = atual->prox;
+        }
+
+        free(atual);
+    
+    } else {
+        printf("Pessoa não encontrada");
+    }
+
+    return aux;
+ }
+
 int main() {
 
     int opcao, idBusca; 
@@ -138,6 +176,10 @@ int main() {
             break;
 
             case 4: 
+                 printf("Digite o ID que deseja alterar:");
+                scanf("%d", &idBusca);
+
+                alterarUsuario(aux, idBusca);
             break;
 
             case 5: 
