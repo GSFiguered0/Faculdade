@@ -2,86 +2,79 @@
 #include <stdlib.h> 
 #include <time.h> 
 #include <string.h>
-typedef struct veiculo{
+
+typedef struct veiculo {
     char prop[50];
     char combustivel[30];
     char modelo[50];
     char cor[50];
     int chassi;
     int ano;
-    char placa[7];
+    char placa[8];  // Aumentar o tamanho da placa para incluir o caractere nulo
     struct veiculo *prox;
 } veiculo;
 
-veiculo* iniciarLista(){
+veiculo* iniciarLista() {
     return NULL;
 }
 
 veiculo* novoVeiculo() {
     veiculo *novoVeic = (veiculo*)malloc(sizeof(veiculo));
 
-    if(novoVeic == NULL) {
+    if (novoVeic == NULL) {
         printf("Não há memória suficiente...");
         exit(EXIT_FAILURE);
-    } 
+    }
 
-    novoVeic -> prox = NULL;
+    novoVeic->prox = NULL;
 
     return novoVeic;
 }
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 veiculo* cadastrarVeiculo(veiculo *aux) {
     veiculo *novoVeic = novoVeiculo();
-    //int tes = 0;
-    //int placaLetras[3];
-    //char placaNumeros[4];
 
-    printf("\nDigite o nome do proprietário do veiculo: ");
+    printf("\nDigite o nome do proprietário do veículo: ");
     fgets(novoVeic->prop, sizeof(novoVeic->prop), stdin);
-    while (getchar() != '\n');
+    limparBuffer();
 
     printf("Qual o tipo de combustível? Álcool/Diesel/Gasolina ");
     fgets(novoVeic->combustivel, sizeof(novoVeic->combustivel), stdin);
 
     printf("Digite o modelo do veículo: ");
     fgets(novoVeic->modelo, sizeof(novoVeic->modelo), stdin);
-    while (getchar() != '\n');
+    limparBuffer();
 
     printf("Digite a cor do veículo: ");
     fgets(novoVeic->cor, sizeof(novoVeic->cor), stdin);
-    while (getchar() != '\n');
+    limparBuffer();
 
     printf("Digite o número do chassi: ");
     scanf("%d", &novoVeic->chassi);
-    while (getchar() != '\n');
+    limparBuffer();
 
     printf("Digite o ano de fabricação: ");
     scanf("%d", &novoVeic->ano);
-
-    //do{
+    limparBuffer();
 
     printf("Digite a placa do veículo: [abc-1234] ");
     fgets(novoVeic->placa, sizeof(novoVeic->placa), stdin);
-    while (getchar() != '\n');
-
-   // for(int c = 0; c < 3; c++) {
-   //     placaLetras[c] = novoVeic->placa[c];
-   // }
-
-    //} while (tes != 1);
+    limparBuffer();
 
     novoVeic->prox = NULL;
 
-
-    if(aux == NULL) {
+    if (aux == NULL) {
         aux = novoVeic;
     } else {
-        veiculo *atual = aux; 
-
-        while(atual->prox != NULL) {
+        veiculo *atual = aux;
+        while (atual->prox != NULL) {
             atual = atual->prox;
         }
-
         atual->prox = novoVeic;
     }
 
@@ -91,30 +84,29 @@ veiculo* cadastrarVeiculo(veiculo *aux) {
 void listarPropData(veiculo *aux) {
     system("clear");
 
-    veiculo *atual = aux; 
+    veiculo *atual = aux;
     int tes = 0;
 
-    if(atual == NULL) {
+    if (atual == NULL) {
         printf("Nenhum veículo registrado...");
-        return; 
+        return;
     } else {
-        while(atual != NULL) {
-            if(atual->ano >= 2010 && strcasecmp(atual->combustivel, "diesel") == 0) {
+        while (atual != NULL) {
+            if (atual->ano >= 2010 && strcasecmp(atual->combustivel, "diesel") == 0) {
                 printf("----------------------------------");
                 printf("\n");
                 printf("Proprietário: %s", atual->prop);
                 printf("\n");
                 tes++;
-        }
+            }
 
             atual = atual->prox;
         }
 
-        if(tes == 0) {
+        if (tes == 0) {
             printf("Não foi encontrado nenhum veículo com os filtros em questão...");
         }
     }
-
 }
 
 void listarPlacas(veiculo *aux) {
@@ -124,26 +116,25 @@ void listarPlacas(veiculo *aux) {
 
     while (atual != NULL) {
         char primeiraLetra = atual->placa[0];
-        int ultimoNum = atual->placa[6]; 
-    
-        if(primeiraLetra == 'j' || primeiraLetra == 'J') {
-            if(ultimoNum == 0 || ultimoNum == 2 || ultimoNum == 4 || ultimoNum == 7) {
-                 printf("----------------------------------");
-                printf("\n");
-                printf("Proprietário: %s", atual->prop);
-                printf("\n");
-                printf("Placa: %s", atual->placa);
-                printf("\n");
-                printf("----------------------------------");
-                tes++;
-            }
+        int ultimoNum = atual->placa[6];
+
+        if ((primeiraLetra == 'j' || primeiraLetra == 'J') &&
+            (ultimoNum == '0' || ultimoNum == '2' || ultimoNum == '4' || ultimoNum == '7')) {
+            printf("----------------------------------");
+            printf("\n");
+            printf("Proprietário: %s", atual->prop);
+            printf("\n");
+            printf("Placa: %s", atual->placa);
+            printf("\n");
+            printf("----------------------------------");
+            tes++;
         }
 
         atual = atual->prox;
     }
 
-    if(tes == 0) {
-         printf("Não foi encontrado nenhum veículo com os filtros em questão...");
+    if (tes == 0) {
+        printf("Não foi encontrado nenhum veículo com os filtros em questão...");
     }
 }
 
@@ -154,42 +145,45 @@ void listarModelos(veiculo *aux) {
 
     while (atual != NULL) {
         char segundaLetra = atual->placa[1];
-        int somaNum = atual->placa[3] + atual->placa[4] + atual->placa[5] + atual->placa[6]; 
-    
-        if(
-            (segundaLetra == 'A' || segundaLetra == 'a') 
-            ||(segundaLetra == 'E' || segundaLetra == 'e') 
-            ||(segundaLetra == 'I' || segundaLetra == 'i')
-            ||(segundaLetra == 'O' || segundaLetra == 'o')
-            ||(segundaLetra == 'U' || segundaLetra == 'u')) 
-        {
-            if(somaNum % 2 == 0) {
-                printf("----------------------------------");
-                printf("\n");
-                printf("Modelo: %s", atual->modelo);
-                printf("\n");
-                printf("Cor: %s", atual->cor);
-                printf("\n");
-                printf("----------------------------------");
-                tes++;
-            }
+        int somaNum = atual->placa[3] + atual->placa[4] + atual->placa[5] + atual->placa[6];
+
+        if ((segundaLetra == 'A' || segundaLetra == 'a' ||
+             segundaLetra == 'E' || segundaLetra == 'e' ||
+             segundaLetra == 'I' || segundaLetra == 'i' ||
+             segundaLetra == 'O' || segundaLetra == 'o' ||
+             segundaLetra == 'U' || segundaLetra == 'u') &&
+            (somaNum % 2 == 0)) {
+            printf("----------------------------------");
+            printf("\n");
+            printf("Modelo: %s", atual->modelo);
+            printf("\n");
+            printf("Cor: %s", atual->cor);
+            printf("\n");
+            printf("----------------------------------");
+            tes++;
         }
 
         atual = atual->prox;
     }
 
-    if(tes == 0) {
-         printf("Não foi encontrado nenhum veículo com os filtros em questão...");
+    if (tes == 0) {
+        printf("Não foi encontrado nenhum veículo com os filtros em questão...");
     }
 }
 
+void liberarMemoria(veiculo *aux) {
+    while (aux != NULL) {
+        veiculo *temp = aux;
+        aux = aux->prox;
+        free(temp);
+    }
+}
 
 int main() {
+    int opcao;
+    veiculo *aux = iniciarLista();
 
-    int opcao; 
-    veiculo *aux =  iniciarLista(); 
-
-    do{ 
+    do {
 
         printf("\n1 - Registrar novo veículo");
         printf("\n2 - Listar proprietários cujos carros são de 2010 ou superior e que sejam movidos a diesel");
@@ -199,27 +193,30 @@ int main() {
         printf("\n0 - Sair");
         printf("\n");
 
-        scanf("%d", &opcao); 
+        scanf("%d", &opcao);
+        limparBuffer();  // Adicionando limpeza do buffer
 
-        switch(opcao) {
-            case 1: 
+        switch (opcao) {
+            case 1:
                 aux = cadastrarVeiculo(aux);
-            break;
+                break;
 
-            case 2: 
+            case 2:
                 listarPropData(aux);
-            break;
+                break;
 
-            case 3: 
+            case 3:
                 listarPlacas(aux);
-            break;
+                break;
 
-            case 4: 
+            case 4:
                 listarModelos(aux);
-            break;
+                break;
         }
 
-    }while (opcao != 0);
+    } while (opcao != 0);
+
+    liberarMemoria(aux);
 
     return 0;
 }
