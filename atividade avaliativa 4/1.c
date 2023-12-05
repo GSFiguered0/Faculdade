@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h> 
+#include <string.h>
 
 typedef struct veiculo{
     char prop[50];
@@ -32,6 +33,9 @@ veiculo* novoVeiculo() {
 
 veiculo* cadastrarVeiculo(veiculo *aux) {
     veiculo *novoVeic = novoVeiculo();
+    int tes = 0;
+    //int placaLetras[3];
+    //char placaNumeros[4];
 
     printf("\nDigite o nome do proprietário do veiculo: ");
     fgets(novoVeic->prop, sizeof(novoVeic->prop), stdin);
@@ -55,9 +59,17 @@ veiculo* cadastrarVeiculo(veiculo *aux) {
     printf("Digite o ano de fabricação: ");
     scanf("%d", &novoVeic->ano);
 
-    printf("Digite a placa do veículo: ");
+    //do{
+
+    printf("Digite a placa do veículo: [abc-1234] ");
     fgets(novoVeic->placa, sizeof(novoVeic->placa), stdin);
     while (getchar() != '\n');
+
+   // for(int c = 0; c < 3; c++) {
+   //     placaLetras[c] = novoVeic->placa[c];
+   // }
+
+    //} while (tes != 1);
 
     novoVeic->prox = NULL;
 
@@ -78,6 +90,8 @@ veiculo* cadastrarVeiculo(veiculo *aux) {
 }
 
 void listarPropData(veiculo *aux) {
+    system("clear");
+
     veiculo *atual = aux; 
     int tes = 0;
 
@@ -105,12 +119,13 @@ void listarPropData(veiculo *aux) {
 }
 
 void listarPlacas(veiculo *aux) {
+    system("clear");
     veiculo *atual = aux;
     int tes = 0;
 
     while (atual != NULL) {
         char primeiraLetra = atual->placa[0];
-        int ultimoNum = atual->placa[7]; 
+        int ultimoNum = atual->placa[6]; 
     
         if(primeiraLetra == 'j' || primeiraLetra == 'J') {
             if(ultimoNum == 0 || ultimoNum == 2 || ultimoNum == 4 || ultimoNum == 7) {
@@ -124,7 +139,7 @@ void listarPlacas(veiculo *aux) {
                 tes++;
             }
         }
-        
+
         atual = atual->prox;
     }
 
@@ -133,31 +148,40 @@ void listarPlacas(veiculo *aux) {
     }
 }
 
-veiculo* excluirProduto(veiculo *aux, int codigo) {
-    veiculo *anterior = NULL;
+void listarModelos(veiculo *aux) {
+    system("clear");
     veiculo *atual = aux;
+    int tes = 0;
 
-    while (atual != NULL && atual->codigo != codigo) {
-        anterior = atual;
+    while (atual != NULL) {
+        char segundaLetra = atual->placa[1];
+        int somaNum = atual->placa[3] + atual->placa[4] + atual->placa[5] + atual->placa[6]; 
+    
+        if(
+            (segundaLetra == 'A' || segundaLetra == 'a') 
+            ||(segundaLetra == 'E' || segundaLetra == 'e') 
+            ||(segundaLetra == 'I' || segundaLetra == 'i')
+            ||(segundaLetra == 'O' || segundaLetra == 'o')
+            ||(segundaLetra == 'U' || segundaLetra == 'u')) 
+        {
+            if(somaNum % 2 == 0) {
+                printf("----------------------------------");
+                printf("\n");
+                printf("Modelo: %s", atual->modelo);
+                printf("\n");
+                printf("Cor: %s", atual->cor);
+                printf("\n");
+                printf("----------------------------------");
+                tes++;
+            }
+        }
+
         atual = atual->prox;
     }
 
-    if (atual != NULL && atual->codigo == codigo) {
-        if (anterior != NULL) {
-            // Excluir depois do primeiro
-            anterior->prox = atual->prox;
-        } else {
-            // Excluir o primeiro elemento
-            aux = atual->prox;
-        }
-
-        free(atual);
-        printf("Produto excluído com sucesso\n");
-    } else {
-        printf("Produto não encontrado\n");
+    if(tes == 0) {
+         printf("Não foi encontrado nenhum veículo com os filtros em questão...");
     }
-
-    return aux; 
 }
 
 
@@ -188,14 +212,11 @@ int main() {
             break;
 
             case 3: 
-                ListarPlacas(aux);
+                listarPlacas(aux);
             break;
 
             case 4: 
-                printf("Digite o código que deseja excluir:");
-                scanf("%d", &codigo);
-
-                aux = excluirProduto(aux, codigo);
+                listarModelos(aux);
             break;
         }
 
