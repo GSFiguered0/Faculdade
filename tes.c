@@ -32,8 +32,7 @@ veiculo* novoVeiculo() {
 }
 
 void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while (getchar() != '\n');
 }
 
 veiculo* cadastrarVeiculo(veiculo *aux) {
@@ -64,6 +63,7 @@ veiculo* cadastrarVeiculo(veiculo *aux) {
 
     printf("Digite a placa do veículo: [abc-1234] ");
     fgets(novoVeic->placa, sizeof(novoVeic->placa), stdin);
+    novoVeic->placa[strcspn(novoVeic->placa, "\n")] = '\0';
     limparBuffer();
 
     novoVeic->prox = NULL;
@@ -82,7 +82,6 @@ veiculo* cadastrarVeiculo(veiculo *aux) {
 }
 
 void listarPropData(veiculo *aux) {
-    system("clear");
 
     veiculo *atual = aux;
     int tes = 0;
@@ -93,6 +92,7 @@ void listarPropData(veiculo *aux) {
     } else {
         while (atual != NULL) {
             if (atual->ano >= 2010 && strcasecmp(atual->combustivel, "diesel") == 0) {
+                system("clear");
                 printf("----------------------------------");
                 printf("\n");
                 printf("Proprietário: %s", atual->prop);
@@ -110,24 +110,26 @@ void listarPropData(veiculo *aux) {
 }
 
 void listarPlacas(veiculo *aux) {
-    system("clear");
     veiculo *atual = aux;
     int tes = 0;
 
     while (atual != NULL) {
-        char primeiraLetra = atual->placa[0];
-        int ultimoNum = atual->placa[6];
+        if (strlen(atual->placa) == 8) {
+            char primeiraLetra = atual->placa[0];
+            int ultimoNum = atual->placa[7] - '0';
 
-        if ((primeiraLetra == 'j' || primeiraLetra == 'J') &&
-            (ultimoNum == '0' || ultimoNum == '2' || ultimoNum == '4' || ultimoNum == '7')) {
-            printf("----------------------------------");
-            printf("\n");
-            printf("Proprietário: %s", atual->prop);
-            printf("\n");
-            printf("Placa: %s", atual->placa);
-            printf("\n");
-            printf("----------------------------------");
-            tes++;
+            if ((primeiraLetra == 'j' || primeiraLetra == 'J') &&
+                (ultimoNum == 0 || ultimoNum == 2 || ultimoNum == 4 || ultimoNum == 7)) {
+                system("cls"); 
+                printf("----------------------------------");
+                printf("\n");
+                printf("Proprietário: %s", atual->prop);
+                printf("\n");
+                printf("Placa: %s", atual->placa);
+                printf("\n");
+                printf("----------------------------------");
+                tes++;
+            }
         }
 
         atual = atual->prox;
@@ -139,7 +141,6 @@ void listarPlacas(veiculo *aux) {
 }
 
 void listarModelos(veiculo *aux) {
-    system("clear");
     veiculo *atual = aux;
     int tes = 0;
 
@@ -153,6 +154,7 @@ void listarModelos(veiculo *aux) {
              segundaLetra == 'O' || segundaLetra == 'o' ||
              segundaLetra == 'U' || segundaLetra == 'u') &&
             (somaNum % 2 == 0)) {
+            system("cls");
             printf("----------------------------------");
             printf("\n");
             printf("Modelo: %s", atual->modelo);
@@ -184,7 +186,7 @@ int main() {
     veiculo *aux = iniciarLista();
 
     do {
-
+        system("clear");
         printf("\n1 - Registrar novo veículo");
         printf("\n2 - Listar proprietários cujos carros são de 2010 ou superior e que sejam movidos a diesel");
         printf("\n3 - Listar placas que comecem com J e terminem com 0, 2, 4 ou 7 e seus proprietários");
